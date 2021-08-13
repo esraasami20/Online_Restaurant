@@ -20,9 +20,10 @@ namespace Online_Restaurant.Services
         }
 
         //search reatarant
-        public List<Restaurant> SearchRestaurant(string name)
+        public List<Restaurant> SearchRestaurant(string name ,int city_Id)
         {
-            return _db.Restaurants.Include(i => i.Cities).Where(p => p.Restaurant_Name.Contains(name) && p.Isdeleted == false).ToList();
+            
+            return _db.Restaurants.Where(p => p.Restaurant_Name.Contains(name)&&p.City_Id==city_Id && p.Isdeleted == false).ToList();
         }
 
 

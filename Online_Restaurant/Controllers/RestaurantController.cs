@@ -29,11 +29,11 @@ namespace Online_Restaurant.Controllers
 
         // search [FromQuery]
 
-        [HttpGet("search/{name}")]
-        public ActionResult Search( string name)
+        [HttpGet("search")]
+        public ActionResult Search([FromQuery] string name,[FromQuery]int city_id)
         {
 
-            var result = _restaurantService.SearchRestaurant(name);
+            var result = _restaurantService.SearchRestaurant(name, city_id);
             return Ok(result);
         }
         //get Restaurant by id

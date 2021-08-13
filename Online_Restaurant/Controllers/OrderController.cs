@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Online_Restaurant.Models;
 using Online_Restaurant.Services;
+using Online_Restaurant.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,12 +49,12 @@ namespace Online_Restaurant.Controllers
             return Ok(result);
         }
         // add Order
-        [HttpPost("{Menu_Id}")]
-        public async Task<ActionResult> AddProductAsync([FromForm] Order order, int Menu_Id)
+        [HttpPost]
+        public async Task<ActionResult> AddProductAsync([FromBody] Checkout order)
         {
             if (ModelState.IsValid)
             {
-                var result = await _orderService.addOrdertAsync(order, Menu_Id);
+                var result = await _orderService.addOrdertAsync(order);
                 if (result.Status == "Success")
 
                     return Ok(result);

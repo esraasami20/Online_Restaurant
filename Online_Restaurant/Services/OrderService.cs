@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Online_Restaurant.Helper;
 using Online_Restaurant.Models;
+using Online_Restaurant.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,14 @@ namespace Online_Restaurant.Services
         {
             _db = db;
         }
+
+        //checkout
+
+
+
+
+
+
 
         // get all Orders
         public List<Order> GetAllOrders()
@@ -47,30 +56,47 @@ namespace Online_Restaurant.Services
         }
 
         //add new Order 
-        public async Task<Response> addOrdertAsync(Order order, int menu_id)
+        public async Task<Response> addOrdertAsync(Checkout order)
         {
-            var result = _db.Menus.FirstOrDefault(i => i.Menu_Id == menu_id && i.Isdeleted == false);
-            if (result != null)
+            Customer customer = new Customer { customer_Name = order.customer_Name,
+                customer_Email = order.customer_Email, 
+                customer_Address = order.customer_Address, 
+                customer_Phone = order.customer_Phone 
+            };
+            _db.Customers.Add(customer);
+            _db.SaveChanges();
+            Order order1 = new Order { customer_Id = customer.customer_Id, Quantity = 0, Total_Price = 0 };
+            _db.Orders.Add(order1);
+            _db.SaveChanges();
+            foreach (var item in order.menus)
             {
-                try
-                {
-                    _db.Orders.Add(order);
-                    _db.SaveChanges();
-                }
-                catch (Exception e)
-                {
-
-                }
-
-                // add to menuorder
-
-                _db.OrderItems.Add(new MenuOrder { Menu_Id = menu_id, Order_Id = order.Order_Id, Total = order.Total_Price,Quantity=order.Quantity });
-                _db.SaveChanges();
-                return new Response { Status = "Success", Message = "Ordered added successfully", data = order };
-
+                _db.OrderItems.Add(new MenuOrder { Order_Id=order1.Order_Id,Menu_Id=item.Menu_Id,Quantity=1,Total=item.Price});
             }
+            order1.Total_Price =_db.OrderItems.Where(i=>i.Order_Id==order1.Order_Id).Select(a=>a.Total).Sum();
+            _db.SaveChanges();
+            //var result = _db.Menus.FirstOrDefault(i => i.Menu_Id == menu_id && i.Isdeleted == false);
+            //if (result != null)
+            //{
+            //    try
+            //    {
+            //        _db.Orders.Add(order);
+            //        _db.SaveChanges();
+            //    }
+            //    catch (Exception e)
+            //    {
 
-            return new Response { Status = "Error", Message = "Inventory not found" };
+            //    }
+
+            //    // add to menuorder
+
+                //_db.OrderItems.Add(new MenuOrder { Menu_Id = menu_id, Order_Id = order.Order_Id, Total = order.Total_Price,Quantity=order.Quantity });
+                //_db.SaveChanges();
+               // return new Response { Status = "Success", Message = "Ordered added successfully", data = order };
+
+            //}
+
+            //return new Response { Status = "Error", Message = " not found" };
+            return new Response { Status = "Success", Message = "Ordered added successfully", data = order };
 
         }
 
