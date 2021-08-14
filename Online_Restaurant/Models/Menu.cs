@@ -24,6 +24,8 @@ namespace Online_Restaurant.Models
 
         [DefaultValue(false)]
         public bool Ischecked{ get; set; }
+        [Required]
+        public int Quantity { get; set; } = 1;
 
         [DefaultValue(false)]
         public bool Isdeleted { get; set; }
