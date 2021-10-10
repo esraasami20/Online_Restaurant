@@ -45,7 +45,7 @@ namespace Online_Restaurant
             services.AddDbContext<RestaurantContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("Restaurant")));
             services.AddControllers().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling =
-                                                               Newtonsoft.Json.ReferenceLoopHandling.Ignore); ;
+                                                               Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddScoped<CityService>();
             services.AddScoped<CustomerService>();
